@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>News Platform</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <h1>🗞️ Latest Articles</h1>
+
+  <nav>
+    <a href="login.html" id="login-link">Login</a>
+    <a href="register.html" id="register-link">Register</a>
+    <a href="create.html" id="create-link" style="display:none;">Create Article</a>
+    <button id="logout" style="display:none;">Logout</button>
+  </nav>
+
+  <div id="articles"></div>
+
+  <script type="module">
+    import { supabase } from './js/supabaseClient.js'
+
+    // Load all articles from database
+    async function loadArticles() {
+      const { data, error } = await supabase
+        .from('articles')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      const container = document.getElementById('articles')
+
+      if (error) {
+        container.innerHTML = `<p>Error loading articles: ${error.message}</p>`
+        return
+      }
+
+      if (!data.length) {
+        container.innerHTML = '<p>No articles found.</p>'
+        return
+      }
+
+      container.innerHTML = data
+        .map(
+          (a) => `
+          <div class="article">
+            <h3>${a.title}</h3>
+            <p>${a.body}</p>
+            <small>${a.category} | ${new Date(a.created_at).toLocaleString()}</small>
+          </div>
+        `
+        )
+        .join('')
+    }
+
+    // Check if user is logged in
+    async function checkUser() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (session) {
+        document.getElementById('login-link').style.display = 'none'
+        document.getElementById('register-link').style.display = 'none'
+        document.getElementById('create-link').style.display = 'inline'
+        document.getElementById('logout').style.display = 'inline'
+      }
+    }
+
+    // Logout function
+    document.getElementById('logout').addEventListener('click', async () => {
+      await supabase.auth.signOut()
+      location.reload()
+    })
+
+    // Load data
+    loadArticles()
+    checkUser()
+  </script>
+</body>
+</html>
