@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Article</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <h2>Submit a New Article</h2>
+
+  <form id="article-form">
+    <input type="text" id="title" placeholder="Title" required />
+    <textarea id="body" placeholder="Body" required></textarea>
+    <input type="text" id="category" placeholder="Category" required />
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="message"></p>
+
+  <script type="module">
+    import { supabase } from './js/supabaseClient.js'
+
+    document.getElementById('article-form').addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      // Check if user is logged in
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        document.getElementById('message').textContent = '⚠️ You must be logged in to submit an article.'
+        return
+      }
+
+      const title = document.getElementById('title').value
+      const body = document.getElementById('body').value
+      const category = document.getElementById('category').value
+
+      const { error } = await supabase.from('articles').insert({
+        title,
+        body,
+        category,
+        submitted_by: user.id,
+      })
+
+      if (error) {
+        document.getElementById('message').textContent = `❌ ${error.message}`
+      } else {
+        document.getElementById('message').textContent = '✅ Article submitted successfully!'
+        document.getElementById('article-form').reset()
+      }
+    })
+  </script>
+</body>
+</html>

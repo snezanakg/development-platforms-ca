@@ -1,0 +1,99 @@
+/*  General Layout */
+body {
+  font-family: Arial, sans-serif;
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  color: #222;
+}
+
+h1, h2 {
+  text-align: center;
+  color: #333;
+}
+
+/*  Navigation */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+a, button {
+  background-color: #0077ff;
+  color: white;
+  padding: 8px 14px;
+  text-decoration: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+a:hover, button:hover {
+  background-color: #005fcc;
+}
+
+/* Article List */
+.article {
+  background-color: white;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.article h3 {
+  margin-top: 0;
+  color: #0077ff;
+}
+
+/* Forms */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+input, textarea {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+textarea {
+  height: 120px;
+}
+
+button {
+  align-self: flex-start;
+}
+
+#message {
+  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
+  nav {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  a, button {
+    width: 90%;
+    text-align: center;
+  }
+}
