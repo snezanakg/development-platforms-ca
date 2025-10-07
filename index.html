@@ -10,6 +10,8 @@
   <h1>🗞️ Latest Articles</h1>
 
   <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
     <a href="login.html" id="login-link">Login</a>
     <a href="register.html" id="register-link">Register</a>
     <a href="create.html" id="create-link" style="display:none;">Create Article</a>
@@ -30,7 +32,7 @@
     const container = document.getElementById('articles')
     container.innerHTML = '<p>Loading articles...</p>'
 
-    //Load all articles from Supabase
+    // Load articles
     async function loadArticles() {
       const { data, error } = await supabase
         .from('articles')
@@ -50,17 +52,16 @@
       container.innerHTML = data
         .map(
           (a) => `
-          <div class="article">
-            <h3>${a.title}</h3>
-            <p>${a.body}</p>
-            <small>${a.category} | ${new Date(a.created_at).toLocaleString()}</small>
-          </div>
-        `
+            <div class="article">
+              <h3>${a.title}</h3>
+              <p>${a.body}</p>
+              <small>${a.category} | ${new Date(a.created_at).toLocaleString()}</small>
+            </div>`
         )
         .join('')
     }
 
-    //Check if user is logged in
+    // Check login
     async function checkUser() {
       const {
         data: { session },
@@ -74,19 +75,17 @@
       }
     }
 
-    // Logout function
+    // Logout
     document.getElementById('logout').addEventListener('click', async () => {
       await supabase.auth.signOut()
       location.reload()
     })
 
-    //Dark mode toggle
-    const toggle = document.getElementById('dark-mode-toggle')
-    toggle.addEventListener('click', () => {
+    // Dark mode
+    document.getElementById('dark-mode-toggle').addEventListener('click', () => {
       document.body.classList.toggle('dark-mode')
     })
 
-    //Run
     loadArticles()
     checkUser()
   </script>

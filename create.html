@@ -3,57 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Create Article</title>
+  <title>Create Article | Supabase News Platform</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <a href="index.html" class="back-link">← Back to Home</a>
+  <h1>📝 Create New Article</h1>
 
-  <h2>Submit a New Article</h2>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <button id="logout">Logout</button>
+  </nav>
 
   <form id="article-form">
-    <input type="text" id="title" placeholder="Title" required />
-    <textarea id="body" placeholder="Body" required></textarea>
-    <input type="text" id="category" placeholder="Category" required />
-    <button type="submit">Submit</button>
+    <input type="text" id="title" placeholder="Article title" required />
+    <textarea id="body" placeholder="Write your article..." required></textarea>
+    <input type="text" id="category" placeholder="Category (e.g. News, Tech)" required />
+    <button type="submit">Submit Article</button>
   </form>
 
   <p id="message"></p>
 
+  <footer>
+    <p>© 2025 Supabase News Platform | Developed by Snežana Kragujevac</p>
+  </footer>
+
   <script type="module">
     import { supabase } from './js/supabaseClient.js'
 
+    // Ensure user is logged in
+    async function checkUser() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (!user) {
+        alert('⚠️ You must be logged in to submit an article.')
+        window.location.href = 'login.html'
+      }
+
+      return user
+    }
+
+    // Submit article
     document.getElementById('article-form').addEventListener('submit', async (e) => {
       e.preventDefault()
 
-      // Check if user is logged in
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        document.getElementById('message').textContent = '⚠️ You must be logged in to submit an article.'
-        return
-      }
-
+      const user = await checkUser()
       const title = document.getElementById('title').value
       const body = document.getElementById('body').value
       const category = document.getElementById('category').value
 
-      const { error } = await supabase.from('articles').insert({
-        title,
-        body,
-        category,
-        submitted_by: user.id,
-      })
+      const { error } = await supabase.from('articles').insert([
+        {
+          title,
+          body,
+          category,
+          submitted_by: user.id,
+        },
+      ])
 
-      if (error) {
-        document.getElementById('message').textContent = `❌ ${error.message}`
-      } else {
-        document.getElementById('message').textContent = '✅ Article submitted successfully!'
-        document.getElementById('article-form').reset()
-      }
+      const msg = document.getElementById('message')
+      msg.textContent = error
+        ? `❌ ${error.message}`
+        : '✅ Article submitted successfully!'
+
+      if (!error) e.target.reset()
     })
+
+    // Logout
+    document.getElementById('logout').addEventListener('click', async () => {
+      await supabase.auth.signOut()
+      window.location.href = 'index.html'
+    })
+
+    checkUser()
   </script>
-  <footer>
-  <p>© 2025 Supabase News Platform | Developed by Snežana Kragujevac</p>
-</footer>
 </body>
 </html>
