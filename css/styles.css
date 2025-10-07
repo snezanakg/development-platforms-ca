@@ -122,3 +122,23 @@ footer {
 .back-link:hover {
   text-decoration: underline;
 }
+body.dark-mode {
+  background-color: #121212;
+  color: #eee;
+}
+
+body.dark-mode .article {
+  background-color: #1e1e1e;
+  color: #ddd;
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode a, 
+body.dark-mode button {
+  background-color: #444;
+  color: #eee;
+}
+
+body.dark-mode footer {
+  border-top-color: #333;
+}
