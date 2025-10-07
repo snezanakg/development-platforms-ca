@@ -1,127 +1,82 @@
-/*  General Layout */
+/* ====== Base Styles ====== */
 body {
-  font-family: Arial, sans-serif;
-  max-width: 700px;
-  margin: 30px auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  color: #222;
-}
-
-h1, h2 {
-  text-align: center;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0 15px;
+  background-color: #fafafa;
   color: #333;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-/*  Navigation */
+h1 {
+  text-align: center;
+  margin: 30px 0 10px;
+  font-size: 2rem;
+}
+
+/* ====== Navigation ====== */
 nav {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 25px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-a, button {
-  background-color: #0077ff;
-  color: white;
-  padding: 8px 14px;
-  text-decoration: none;
+nav a,
+button {
+  background: #0077ff;
+  color: #fff;
   border: none;
+  padding: 8px 14px;
+  margin: 5px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 15px;
+  text-decoration: none;
+  transition: background 0.3s ease;
 }
 
-a:hover, button:hover {
-  background-color: #005fcc;
+nav a:hover,
+button:hover {
+  background: #005fd1;
 }
 
-/* Article List */
+/* ====== Articles ====== */
+#articles {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
 .article {
-  background-color: white;
-  padding: 15px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
   margin-bottom: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.article:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   transition: all 0.2s ease-in-out;
 }
 
+.article:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
 
 .article h3 {
   margin-top: 0;
-  color: #0077ff;
 }
 
-/* Forms */
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 15px;
+.article small {
+  color: #666;
 }
 
-input, textarea {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-textarea {
-  height: 120px;
-}
-
-button {
-  align-self: flex-start;
-}
-
-#message {
-  margin-top: 15px;
-  text-align: center;
-  font-weight: bold;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  body {
-    padding: 10px;
-  }
-
-  nav {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  a, button {
-    width: 90%;
-    text-align: center;
-  }
-}
+/* ====== Footer ====== */
 footer {
   text-align: center;
-  margin-top: 30px;
-  padding: 15px;
-  font-size: 14px;
+  margin: 40px 0 10px;
+  padding: 10px;
+  font-size: 0.9rem;
   color: #777;
   border-top: 1px solid #ddd;
 }
-.back-link {
-  display: inline-block;
-  margin-bottom: 15px;
-  color: #0077ff;
-  text-decoration: none;
-  font-size: 14px;
-}
 
-.back-link:hover {
-  text-decoration: underline;
-}
+/* ====== Dark Mode ====== */
 body.dark-mode {
   background-color: #121212;
   color: #eee;
@@ -129,11 +84,12 @@ body.dark-mode {
 
 body.dark-mode .article {
   background-color: #1e1e1e;
+  border-color: #333;
   color: #ddd;
-  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
 }
 
-body.dark-mode a, 
+body.dark-mode nav a,
 body.dark-mode button {
   background-color: #444;
   color: #eee;
@@ -141,4 +97,34 @@ body.dark-mode button {
 
 body.dark-mode footer {
   border-top-color: #333;
+  color: #aaa;
+}
+
+/* ====== Reusable Components ====== */
+.dark-mode-btn {
+  display: block;
+  margin: 0 auto 20px;
+  padding: 8px 14px;
+  background-color: #ffb300;
+  color: #111;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.dark-mode-btn:hover {
+  background-color: #ffa000;
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 600px) {
+  nav a,
+  button {
+    display: block;
+    width: 100%;
+    margin: 8px 0;
+  }
+
+  .article {
+    padding: 15px;
+  }
 }
