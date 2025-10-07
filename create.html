@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Create Article | Supabase News Platform</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" type="image/png" href="assets/icon-article.png" />
 </head>
 <body>
-  <h1>📝 Create New Article</h1>
+  <h1><img src="assets/icon-article.png" width="28" /> Create New Article</h1>
 
   <nav>
     <a href="index.html">Home</a>
@@ -15,14 +16,21 @@
     <button id="logout">Logout</button>
   </nav>
 
-  <form id="article-form">
-    <input type="text" id="title" placeholder="Article title" required />
-    <textarea id="body" placeholder="Write your article..." required></textarea>
-    <input type="text" id="category" placeholder="Category (e.g. News, Tech)" required />
-    <button type="submit">Submit Article</button>
-  </form>
+  <main class="content">
+    <form id="article-form" class="form-container">
+      <label>Title</label>
+      <input type="text" id="title" placeholder="Enter article title" required />
 
-  <p id="message"></p>
+      <label>Body</label>
+      <textarea id="body" placeholder="Write your article here..." required></textarea>
+
+      <label>Category</label>
+      <input type="text" id="category" placeholder="Enter category" required />
+
+      <button type="submit">Submit Article</button>
+      <p id="message"></p>
+    </form>
+  </main>
 
   <footer>
     <p>© 2025 Supabase News Platform | Developed by Snežana Kragujevac</p>
@@ -31,28 +39,25 @@
   <script type="module">
     import { supabase } from './js/supabaseClient.js'
 
-    // Ensure user is logged in
     async function checkUser() {
       const {
         data: { user },
       } = await supabase.auth.getUser()
 
       if (!user) {
-        alert('⚠️ You must be logged in to submit an article.')
+        alert('⚠️ You must be logged in to create an article.')
         window.location.href = 'login.html'
       }
-
       return user
     }
 
-    // Submit article
     document.getElementById('article-form').addEventListener('submit', async (e) => {
       e.preventDefault()
-
       const user = await checkUser()
-      const title = document.getElementById('title').value
-      const body = document.getElementById('body').value
-      const category = document.getElementById('category').value
+
+      const title = document.getElementById('title').value.trim()
+      const body = document.getElementById('body').value.trim()
+      const category = document.getElementById('category').value.trim()
 
       const { error } = await supabase.from('articles').insert([
         {
@@ -64,14 +69,14 @@
       ])
 
       const msg = document.getElementById('message')
-      msg.textContent = error
-        ? `❌ ${error.message}`
-        : '✅ Article submitted successfully!'
-
-      if (!error) e.target.reset()
+      if (error) {
+        msg.textContent = `❌ ${error.message}`
+      } else {
+        msg.textContent = '✅ Article submitted successfully!'
+        document.getElementById('article-form').reset()
+      }
     })
 
-    // Logout
     document.getElementById('logout').addEventListener('click', async () => {
       await supabase.auth.signOut()
       window.location.href = 'index.html'

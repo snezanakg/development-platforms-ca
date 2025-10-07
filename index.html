@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>📰 Supabase News Platform</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" type="image/png" href="assets/icon-news.png" />
 </head>
 <body>
-  <h1>🗞️ Latest Articles</h1>
+  <h1><img src="assets/icon-news-round.png" width="32" /> Latest Articles</h1>
 
   <nav>
     <a href="index.html">Home</a>
@@ -18,7 +19,9 @@
     <button id="logout" style="display:none;">Logout</button>
   </nav>
 
-  <button id="dark-mode-toggle" class="dark-mode-btn">🌓 Toggle Dark Mode</button>
+  <button id="dark-mode-toggle" class="dark-mode-btn">
+    <img src="assets/icon-darkmode.png" width="20" /> Toggle Dark Mode
+  </button>
 
   <div id="articles"></div>
 
@@ -32,7 +35,6 @@
     const container = document.getElementById('articles')
     container.innerHTML = '<p>Loading articles...</p>'
 
-    // Load articles
     async function loadArticles() {
       const { data, error } = await supabase
         .from('articles')
@@ -52,16 +54,16 @@
       container.innerHTML = data
         .map(
           (a) => `
-            <div class="article">
-              <h3>${a.title}</h3>
-              <p>${a.body}</p>
-              <small>${a.category} | ${new Date(a.created_at).toLocaleString()}</small>
-            </div>`
+          <div class="article">
+            <h3><img src="assets/icon-article.png" width="20" /> ${a.title}</h3>
+            <p>${a.body}</p>
+            <small>${a.category} | ${new Date(a.created_at).toLocaleString()}</small>
+          </div>
+        `
         )
         .join('')
     }
 
-    // Check login
     async function checkUser() {
       const {
         data: { session },
@@ -75,14 +77,13 @@
       }
     }
 
-    // Logout
     document.getElementById('logout').addEventListener('click', async () => {
       await supabase.auth.signOut()
       location.reload()
     })
 
-    // Dark mode
-    document.getElementById('dark-mode-toggle').addEventListener('click', () => {
+    const toggle = document.getElementById('dark-mode-toggle')
+    toggle.addEventListener('click', () => {
       document.body.classList.toggle('dark-mode')
     })
 
