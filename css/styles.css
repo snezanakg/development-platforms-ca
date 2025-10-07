@@ -97,3 +97,22 @@ button {
     text-align: center;
   }
 }
+footer {
+  text-align: center;
+  margin-top: 30px;
+  padding: 15px;
+  font-size: 14px;
+  color: #777;
+  border-top: 1px solid #ddd;
+}
+.back-link {
+  display: inline-block;
+  margin-bottom: 15px;
+  color: #0077ff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}

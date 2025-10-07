@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>News Platform</title>
+  <title>📰 Supabase News Platform</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -18,17 +18,22 @@
 
   <div id="articles"></div>
 
+  <footer>
+    <p>© 2025 Supabase News Platform | Developed by Snežana Kragujevac</p>
+  </footer>
+
   <script type="module">
     import { supabase } from './js/supabaseClient.js'
 
-    // Load all articles from database
+    const container = document.getElementById('articles')
+    container.innerHTML = '<p>Loading articles...</p>'
+
+    // Load all articles from Supabase
     async function loadArticles() {
       const { data, error } = await supabase
         .from('articles')
         .select('*')
         .order('created_at', { ascending: false })
-
-      const container = document.getElementById('articles')
 
       if (error) {
         container.innerHTML = `<p>Error loading articles: ${error.message}</p>`
@@ -53,7 +58,7 @@
         .join('')
     }
 
-    // Check if user is logged in
+    // Check login status
     async function checkUser() {
       const {
         data: { session },
@@ -67,13 +72,13 @@
       }
     }
 
-    // Logout function
+    // Logout user
     document.getElementById('logout').addEventListener('click', async () => {
       await supabase.auth.signOut()
       location.reload()
     })
 
-    // Load data
+    // Run
     loadArticles()
     checkUser()
   </script>
