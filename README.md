@@ -9,127 +9,92 @@
 
 ---
 
-## 🚀 Overview
-This project is a **functional news platform** built using **Supabase** for backend services and **HTML, CSS, and JavaScript** for the frontend.  
-It allows users to:
-- View all news articles (public)
-- Register and log in
-- Create new articles (only for logged-in users)
-- Articles automatically record the logged-in author and timestamp
+## 🚀 Project Description  
+A full-stack-like news platform where users can:  
+- View public articles  
+- Register, confirm email, log in  
+- Create articles (only for logged in users)  
+- Articles are tagged with author and timestamp  
+
+Built using Supabase (auth + database) and frontend with HTML, CSS, JS.
 
 ---
 
-## 🧱 Tech Stack
-**Frontend:** HTML, CSS, JavaScript  
-**Backend (PaaS):** [Supabase](https://supabase.com)  
-**Database:** Supabase PostgreSQL (articles table)  
-**Authentication:** Supabase Email/Password  
-**Version Control:** Git + GitHub  
+## 🧱 Tech Stack  
+- Frontend: HTML, CSS, JavaScript  
+- Backend: Supabase (auth + database)  
+- Version Control: Git / GitHub  
 
 ---
 
-## ⚙️ Installation & Setup
+## 🔧 Setup & Installation
 
-### 1️⃣ Clone the Repository
-```bash
-git clone https://github.com/snezanakg/development-platforms-ca.git
-cd development-platforms-ca
-2️⃣ Open Locally
-Open any file (e.g., index.html) in your browser using Live Server or by double-clicking it.
-
-3️⃣ Supabase Configuration
-Already included in:
-
-bash
-js/supabaseClient.js
-Your configuration:
-
-js
+1. Clone the repo  
+   git clone https://github.com/snezanakg/development-platforms-ca.git
+   cd development-platforms-ca
+Edit js/supabaseClient.js and set:
 const SUPABASE_URL = 'https://bncbcsqohzxnajkqigad.supabase.co'
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE'
-🧠 Motivation
-I chose Option 2 (Frontend with Supabase) because I wanted to build a full-stack-style project using a modern SaaS backend.
-Supabase made it easy to integrate authentication, database, and API features without hosting my own backend.
+const SUPABASE_ANON_KEY = '...your anon public key...'
+Open index.html (or any page) in your browser to run locally.
 
-👍 What I Liked
-How quickly Supabase sets up authentication and database tables.
+✅ Features & Pages
+index.html — List of articles, login/register, dark mode toggle
 
-Using RLS (Row Level Security) to protect data easily.
+create.html — Form to submit new article (auth required)
 
-😓 What Was Difficult
-Understanding Row Level Security policies.
+login.html — Login form
 
-Making sure authentication state updated correctly between pages.
+register.html — Registration form
 
-⚖️ Supabase vs Custom API
-Using Supabase saved time and avoided writing backend logic manually.
-A custom Express.js API offers more control, but Supabase is ideal for rapid development and scalable prototypes.
+about.html — Info about project + developer
 
-✅ Features Checklist
- Public article list
+All pages include navigation (Home, About, and appropriate links/buttons) and footer.
 
- User registration with email + password
-
- Email confirmation
-
- User login and logout
-
- Auth-protected article creation
-
- Articles stored in Supabase table
-
- Responsive design with CSS
-
- Working Supabase integration
-
- Clean modular JS (auth.js, articles.js)
-
-📂 Project Structure
-development-platforms-ca/
-├── index.html          # View all articles
-├── login.html          # Login page
-├── register.html       # Registration page
-├── create.html         # Submit new article (auth required)
-├── js/
-│   ├── supabaseClient.js  # Connection setup
-│   ├── auth.js            # Auth helpers
-│   └── articles.js        # Article fetch & insert logic
-├── css/
-│   └── styles.css
-└── README.md
-🧩 Database Schema
-Table: articles
-
-Column	Type	Description
-id	int8	Primary key
+🗂 Database Schema (articles table)
+Column	Type	Notes
+id	int8	Primary key auto-generated
 title	text	Article title
 body	text	Article content
 category	text	Article category
-submitted_by	uuid	References logged-in user
-created_at	timestamp	Default now()
+submitted_by	uuid	Author’s user ID
+created_at	timestamptz	Defaults to now()
 
-Row Level Security (RLS)
+RLS Policies (Row Level Security)
 
-✅ Anyone can SELECT (read articles)
+SELECT policy: allow all users (anyone)
 
-✅ Authenticated users can INSERT (add articles)
+INSERT policy: allow only authenticated users
 
-🧑‍💻 How to Use
-Register with an email and password.
+🎨 Styling & UX Enhancements
+DRY CSS structure
 
-Confirm your email (check inbox).
+Hover effect on article cards
 
-Log in to unlock the “Create Article” button.
+Dark mode toggle
 
-Submit your article.
+Consistent footer + navigation across pages
 
-Refresh the homepage to see it listed.
+Responsive design
 
-🏁 Submission Info
-Branch: feature/news-platform
+🧾 How to Use
+Register → confirm via email
 
-Pull Request: Submit PR link to Moodle
+Log in
 
-GitHub Username for Grading Access: cnnrbrn
+On homepage, click Create Article
 
-© 2025 Snežana Kragujevac– Noroff School of Technology and Digital Media
+Submit your article
+
+Refresh homepage → new article should appear
+
+📦 Final Commits & Contribution
+We made final commits including:
+
+Navigation and layout fixes on all pages
+
+Create page logic corrected
+
+CSS polishing
+
+README update
+
