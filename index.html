@@ -8,8 +8,9 @@
   <link rel="icon" type="image/png" href="assets/icon-news.png" />
 </head>
 <body>
-  <h1><img src="assets/icon-news-round.png" width="32" /> Latest Articles</h1>
+  <h1><img src="assets/icon-news-round.png" width="32" alt="News" /> Latest Articles</h1>
 
+  <!-- ===== Navigation ===== -->
   <nav>
     <a href="index.html">Home</a>
     <a href="about.html">About</a>
@@ -19,30 +20,56 @@
     <button id="logout" style="display:none;">Logout</button>
   </nav>
 
+  <!-- ===== Filter Section ===== -->
+  <div id="filter-container" class="filter-bar">
+    <label for="category-filter">Filter by Category:</label>
+    <select id="category-filter">
+      <option value="">All</option>
+    </select>
+  </div>
+
+  <!-- ===== Dark Mode Toggle ===== -->
   <button id="dark-mode-toggle" class="dark-mode-btn">
-    <img src="assets/icon-darkmode.png" width="20" /> Toggle Dark Mode
+    <img src="assets/icon-darkmode.png" width="20" alt="Dark Mode" /> Toggle Dark Mode
   </button>
 
+  <!-- ===== Article Container ===== -->
   <div id="articles"></div>
 
   <footer>
     <p>© 2025 Supabase News Platform | Developed by Snežana Kragujevac</p>
   </footer>
 
+  <!-- ===== Script Section ===== -->
   <script type="module">
     import { supabase } from './js/supabaseClient.js'
 
     const container = document.getElementById('articles')
-    container.innerHTML = '<p>Loading articles...</p>'
+    const filterDropdown = document.getElementById('category-filter')
 
-    async function loadArticles() {
-      const { data, error } = await supabase
-        .from('articles')
-        .select('*')
-        .order('created_at', { ascending: false })
+    // Load Unique Categories
+    async function loadCategories() {
+      const { data, error } = await supabase.from('articles').select('category')
+      if (error) return console.error('Error loading categories:', error.message)
+      const categories = [...new Set(data.map((a) => a.category))] // unique values
+      categories.forEach((cat) => {
+        const opt = document.createElement('option')
+        opt.value = cat
+        opt.textContent = cat
+        filterDropdown.appendChild(opt)
+      })
+    }
+
+    // Load Articles (optionally filtered)
+    async function loadArticles(category = '') {
+      container.innerHTML = '<p>Loading articles...</p>'
+      let query = supabase.from('articles').select('*').order('created_at', { ascending: false })
+      if (category) query = query.eq('category', category)
+
+      const { data, error } = await query
 
       if (error) {
-        container.innerHTML = `<p>Error loading articles: ${error.message}</p>`
+        container.innerHTML = `<p>Error: ${error.message}</p>`
         return
       }
 
@@ -55,20 +82,24 @@
         .map(
           (a) => `
           <div class="article">
-            <h3><img src="assets/icon-article.png" width="20" /> ${a.title}</h3>
+            <h3><img src="assets/icon-article.png" width="20" alt="Article" /> ${a.title}</h3>
             <p>${a.body}</p>
             <small>${a.category} | ${new Date(a.created_at).toLocaleString()}</small>
-          </div>
-        `
+          </div>`
         )
         .join('')
     }
 
+    // Filter Change Event
+    filterDropdown.addEventListener('change', (e) => {
+      loadArticles(e.target.value)
+    })
+
+    // Check if User Logged In
     async function checkUser() {
       const {
         data: { session },
       } = await supabase.auth.getSession()
-
       if (session) {
         document.getElementById('login-link').style.display = 'none'
         document.getElementById('register-link').style.display = 'none'
@@ -77,16 +108,20 @@
       }
     }
 
+    // Logout Functionality
     document.getElementById('logout').addEventListener('click', async () => {
       await supabase.auth.signOut()
       location.reload()
     })
 
+    // Dark Mode Toggle
     const toggle = document.getElementById('dark-mode-toggle')
     toggle.addEventListener('click', () => {
       document.body.classList.toggle('dark-mode')
     })
 
+    // Run App
+    loadCategories()
     loadArticles()
     checkUser()
   </script>
