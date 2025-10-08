@@ -9,9 +9,9 @@
 </head>
 <body>
   <h1><img src="assets/icon-article.png" width="28" /> Create New Article</h1>
-
-  <nav>
+ <nav>
     <a href="index.html">Home</a>
+    <a href="my-articles.html">My Articles</a>
     <a href="about.html">About</a>
     <button id="logout">Logout</button>
   </nav>
@@ -22,10 +22,17 @@
       <input type="text" id="title" placeholder="Enter article title" required />
 
       <label>Body</label>
-      <textarea id="body" placeholder="Write your article here..." required></textarea>
+      <textarea id="body" placeholder="Write your article here..." required minlength="20"></textarea>
 
       <label>Category</label>
-      <input type="text" id="category" placeholder="Enter category" required />
+      <select id="category" required>
+        <option value="">Select category</option>
+        <option value="Politics">Politics</option>
+        <option value="Technology">Technology</option>
+        <option value="Sports">Sports</option>
+        <option value="Culture">Culture</option>
+        <option value="World">World</option>
+      </select>
 
       <button type="submit">Submit Article</button>
       <p id="message"></p>
@@ -35,69 +42,71 @@
   <footer>
     <p>© 2025 Supabase News Platform | Developed by Snežana Kragujevac</p>
   </footer>
-<script type="module">
-  import { supabase } from './js/supabaseClient.js'
 
-  async function checkUser() {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
+  <script type="module">
+    import { supabase } from './js/supabaseClient.js'
 
-    if (!user) {
-      alert('⚠️ You must be logged in to create an article.')
-      window.location.href = 'login.html'
+    // Check user authentication
+    async function checkUser() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) {
+        alert('⚠️ You must be logged in to create an article.')
+        window.location.href = 'login.html'
+      }
+      return user
     }
-    return user
-  }
 
-  // 🎯 Success Modal Function
-  function showSuccessModal(message) {
-    const modal = document.createElement('div')
-    modal.className = 'modal'
-    modal.innerHTML = `
-      <div class="modal-content">
-        <p>${message}</p>
-        <p>Redirecting to homepage...</p>
-      </div>
-    `
-    document.body.appendChild(modal)
-
-    setTimeout(() => {
-      modal.remove()
-      window.location.href = 'index.html'
-    }, 3000)
-  }
-
-  // 📝 Submit Article
-  document.getElementById('article-form').addEventListener('submit', async (e) => {
-    e.preventDefault()
-    const user = await checkUser()
-
-    const title = document.getElementById('title').value.trim()
-    const body = document.getElementById('body').value.trim()
-    const category = document.getElementById('category').value.trim()
-
-    const { error } = await supabase.from('articles').insert([
-      { title, body, category, submitted_by: user.id },
-    ])
-
-    const msg = document.getElementById('message')
-    if (error) {
-      msg.textContent = `❌ ${error.message}`
-    } else {
-      msg.textContent = ''
-      showSuccessModal('✅ Article submitted successfully!')
-      document.getElementById('article-form').reset()
+    // Show message in green or red
+    function showMessage(text, success = true) {
+      const msg = document.getElementById('message')
+      msg.textContent = text
+      msg.style.color = success ? 'green' : 'red'
     }
-  })
 
-  // 🚪 Logout
-  document.getElementById('logout').addEventListener('click', async () => {
-    await supabase.auth.signOut()
-    window.location.href = 'index.html'
-  })
+    //Submit form
+    document.getElementById('article-form').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const user = await checkUser()
 
-  checkUser()
-</script>
+      const title = document.getElementById('title').value.trim()
+      const body = document.getElementById('body').value.trim()
+      const category = document.getElementById('category').value
+
+      if (!title || !body || !category) {
+        showMessage('❌ Please fill in all fields.', false)
+        return
+      }
+
+      if (body.length < 20) {
+        showMessage('❌ Body must be at least 20 characters long.', false)
+        return
+      }
+
+      const { error } = await supabase.from('articles').insert([
+        { title, body, category, submitted_by: user.id },
+      ])
+
+      if (error) {
+        showMessage(`❌ ${error.message}`, false)
+      } else {
+        showMessage('✅ Article submitted successfully! Redirecting...')
+        setTimeout(() => (window.location.href = 'index.html'), 2500)
+      }
+    })
+
+    //Logout confirmation
+    document.getElementById('logout').addEventListener('click', async () => {
+      const confirmLogout = confirm('Are you sure you want to log out?')
+      if (confirmLogout) {
+        await supabase.auth.signOut()
+        window.location.href = 'index.html'
+      }
+    })
+
+    // Run
+    checkUser()
+  </script>
 </body>
 </html>
