@@ -15,6 +15,7 @@
     <a href="about.html">About</a>
     <button id="logout">Logout</button>
   </nav>
+<div id="user-info" class="user-banner" style="display:none;"></div>
 
   <main class="content">
     <form id="article-form" class="form-container">
@@ -48,15 +49,21 @@
 
     // Check user authentication
     async function checkUser() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) {
-        alert('⚠️ You must be logged in to create an article.')
-        window.location.href = 'login.html'
-      }
-      return user
-    }
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const userBanner = document.getElementById('user-info')
+
+  if (!user) {
+    alert('⚠️ You must be logged in to create an article.')
+    window.location.href = 'login.html'
+  } else {
+    userBanner.style.display = 'block'
+    userBanner.textContent = `👤 Logged in as: ${user.email}`
+  }
+  return user
+}
 
     // Show message in green or red
     function showMessage(text, success = true) {

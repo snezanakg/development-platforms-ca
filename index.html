@@ -12,6 +12,9 @@
 
   <!-- ===== Navigation ===== -->
   <nav>
+    <div id="user-info" class="user-banner" style="display:none;"></div>
+
+    <a href="my-articles.html" id="my-articles-link" style="display:none;">My Articles</a>
     <a href="index.html">Home</a>
     <a href="about.html">About</a>
     <a href="login.html" id="login-link">Login</a>
@@ -96,17 +99,27 @@
     })
 
     // Check if User Logged In
-    async function checkUser() {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      if (session) {
-        document.getElementById('login-link').style.display = 'none'
-        document.getElementById('register-link').style.display = 'none'
-        document.getElementById('create-link').style.display = 'inline'
-        document.getElementById('logout').style.display = 'inline'
-      }
-    }
+   async function checkUser() {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  const userBanner = document.getElementById('user-info')
+
+  if (session && session.user) {
+    document.getElementById('login-link').style.display = 'none'
+    document.getElementById('register-link').style.display = 'none'
+    document.getElementById('create-link').style.display = 'inline'
+    document.getElementById('my-articles-link').style.display = 'inline'
+    document.getElementById('logout').style.display = 'inline'
+
+    userBanner.style.display = 'block'
+    userBanner.textContent = `👤 Logged in as: ${session.user.email}`
+  } else {
+    userBanner.style.display = 'none'
+  }
+}
+
 
     // Logout Functionality
     document.getElementById('logout').addEventListener('click', async () => {

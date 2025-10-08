@@ -272,3 +272,23 @@ body.dark-mode .modal-content {
   border: 1px solid #ccc;
   font-size: 14px;
 }
+/* ===== User Banner ===== */
+.user-banner {
+  text-align: center;
+  background: rgba(0, 119, 255, 0.1);
+  border: 1px solid #0077ff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 0 auto 20px;
+  max-width: 400px;
+  color: #0077ff;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+body.dark-mode .user-banner {
+  background: rgba(0, 119, 255, 0.15);
+  border-color: #3399ff;
+  color: #66b3ff;
+}
+
