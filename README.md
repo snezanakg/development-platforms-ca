@@ -1,100 +1,128 @@
-# development-platforms-ca
+# 📰 Supabase News Platform
 
-## Project: Supabase News Platform
+A full-stack web application that allows users to **browse**, **filter**, and **create news articles** with authentication, using **Supabase** as the backend service.
 
-### 👩‍💻 Author
-**Name:** Snežana Kragujevac
-**Email:** snekra02735@stud.noroff.no  
-**GitHub Repo:** [https://github.com/snezanakg/development-platforms-ca](https://github.com/snezanakg/development-platforms-ca)
+Developed as part of the **Development Platforms Course Assignment (Noroff)**.
 
 ---
 
-## 🚀 Project Description  
-A full-stack-like news platform where users can:  
-- View public articles  
-- Register, confirm email, log in  
-- Create articles (only for logged in users)  
-- Articles are tagged with author and timestamp  
+## 🚀 Features
 
-Built using Supabase (auth + database) and frontend with HTML, CSS, JS.
-
----
-
-## 🧱 Tech Stack  
-- Frontend: HTML, CSS, JavaScript  
-- Backend: Supabase (auth + database)  
-- Version Control: Git / GitHub  
+✅ User authentication (register, login, logout)  
+✅ Create new articles (authenticated users only)  
+✅ Browse all articles (public access)  
+✅ Filter articles by category  
+✅ View personal “My Articles” page  
+✅ Form validation and visual feedback  
+✅ Dark mode toggle  
+✅ Responsive layout for mobile and desktop  
 
 ---
 
-## 🔧 Setup & Installation
+## 🧠 Technology Stack
 
-1. Clone the repo  
-   git clone https://github.com/snezanakg/development-platforms-ca.git
-   cd development-platforms-ca
-Edit js/supabaseClient.js and set:
-const SUPABASE_URL = 'https://bncbcsqohzxnajkqigad.supabase.co'
-const SUPABASE_ANON_KEY = '...your anon public key...'
-Open index.html (or any page) in your browser to run locally.
+**Frontend:**
+- HTML5, CSS3, JavaScript (ES Modules)
+- Supabase JS Client Library
 
-✅ Features & Pages
-index.html — List of articles, login/register, dark mode toggle
+**Backend (Platform-as-a-Service):**
+- [Supabase](https://supabase.com/) for:
+  - Authentication (email/password)
+  - Database (PostgreSQL)
+  - Row Level Security (RLS)
 
-create.html — Form to submit new article (auth required)
+---
 
-login.html — Login form
+## ⚙️ Installation and Setup
 
-register.html — Registration form
+### 1️⃣ Clone the Repository
 
-about.html — Info about project + developer
+git clone https://github.com/<your-username>/development-platforms-ca.git
+cd development-platforms-ca
+2️⃣ Configure Supabase
+Create a Supabase project and set up two tables:
 
-All pages include navigation (Home, About, and appropriate links/buttons) and footer.
-
-🗂 Database Schema (articles table)
-Column	Type	Notes
-id	int8	Primary key auto-generated
+users (automatic via Supabase Auth)
+articles
+Column	Type	Description
+id	bigint	Primary key
 title	text	Article title
 body	text	Article content
 category	text	Article category
-submitted_by	uuid	Author’s user ID
-created_at	timestamptz	Defaults to now()
+submitted_by	uuid	User ID (foreign key)
+created_at	timestamp	Default: now()
 
-RLS Policies (Row Level Security)
+Enable RLS on the articles table.
 
-SELECT policy: allow all users (anyone)
+Then copy your Supabase URL and anon key into js/supabaseClient.js:
 
-INSERT policy: allow only authenticated users
 
-🎨 Styling & UX Enhancements
-DRY CSS structure
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-Hover effect on article cards
+const SUPABASE_URL = 'https://yourproject.supabase.co'
+const SUPABASE_ANON_KEY = 'your-anon-key'
 
-Dark mode toggle
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+3️⃣ Run the Project
+Just open index.html in your browser.
+You can also use the Live Server VS Code extension for easier local testing.
 
-Consistent footer + navigation across pages
+🧩 File Structure
 
-Responsive design
+development-platforms-ca/
+│
+├── css/
+│   └── styles.css
+│
+├── js/
+│   └── supabaseClient.js
+├── auth.js
+│ └── articles.js 
+├── index.html
+├── login.html
+├── register.html
+├── create.html
+├── articles.html
+├── about.html
+├── README.md
+└── assets/
+    ├── icon-news.png
+    ├── icon-login.png
+    ├── icon-register.png
+    ├── icon-article.png
+    └── icon-news-round.png
+💬 Motivation
+I chose Option 2 (Frontend with Supabase) because I enjoy creating full-stack applications with instant backend integration and authentication handled automatically.
 
-🧾 How to Use
-Register → confirm via email
+What I liked:
+Supabase makes backend setup fast and developer-friendly
 
-Log in
+Authentication and database management were smooth
 
-On homepage, click Create Article
+Seeing everything connected and live on the frontend was rewarding
 
-Submit your article
+What I found difficult:
+Handling authentication states correctly across pages
 
-Refresh homepage → new article should appear
+Styling consistent layouts and dark mode
 
-📦 Final Commits & Contribution
-We made final commits including:
+Managing async Supabase responses for validation
 
-Navigation and layout fixes on all pages
+What I learned:
+How to use Supabase for real-world web app projects
 
-Create page logic corrected
+How to combine frontend and backend logic securely
 
-CSS polishing
+How to structure clean, DRY, modular code in JavaScript
 
-README update
+Custom API vs SaaS (Supabase)
+A custom API (Express) gives full control but requires more setup
+
+Supabase (SaaS) is faster for development and includes built-in auth, RLS, and database UI
+
+For small to mid-sized apps, Supabase is ideal for simplicity and speed
+
+🧾 Credits
+Developed by Snežana Kragujevac
+© 2025 — Supabase News Platform
 
