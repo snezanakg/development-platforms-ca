@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Articles | Supabase News Platform</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" type="image/png" href="assets/icon-article.png" />
+</head>
+<body>
+  <h1><img src="assets/icon-article.png" width="28" alt="My Articles" /> My Articles</h1>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="create.html">Create</a>
+    <a href="about.html">About</a>
+    <button id="logout">Logout</button>
+  </nav>
+
+  <div id="articles"></div>
+
+  <footer>
+    <p>© 2025 Supabase News Platform | Developed by Snežana Kragujevac</p>
+  </footer>
+
+  <script type="module">
+    import { supabase } from './js/supabaseClient.js'
+
+    const container = document.getElementById('articles')
+
+    //Ensure user is logged in
+    async function checkUser() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (!user) {
+        alert('⚠️ You must be logged in to view your articles.')
+        window.location.href = 'login.html'
+      } else {
+        loadUserArticles(user.id)
+      }
+
+      return user
+    }
+
+    //Load Articles by User ID
+    async function loadUserArticles(userId) {
+      container.innerHTML = '<p>Loading your articles...</p>'
+
+      const { data, error } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('submitted_by', userId)
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        container.innerHTML = `<p>Error loading your articles: ${error.message}</p>`
+        return
+      }
+
+      if (!data.length) {
+        container.innerHTML = '<p>You haven’t posted any articles yet.</p>'
+        return
+      }
+
+      container.innerHTML = data
+        .map(
+          (a) => `
+          <div class="article">
+            <h3><img src="assets/icon-news-outline.png" width="20" /> ${a.title}</h3>
+            <p>${a.body}</p>
+            <small>${a.category} | ${new Date(a.created_at).toLocaleString()}</small>
+          </div>
+        `
+        )
+        .join('')
+    }
+
+    //Logout
+    document.getElementById('logout').addEventListener('click', async () => {
+      await supabase.auth.signOut()
+      window.location.href = 'index.html'
+    })
+
+    //Run
+    checkUser()
+  </script>
+</body>
+</html>

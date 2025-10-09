@@ -1,0 +1,327 @@
+/* ====== GLOBAL ====== */
+:root {
+  --primary: #0077ff;
+  --primary-hover: #005fd1;
+  --bg-light: #fafafa;
+  --bg-dark: #121212;
+  --text-light: #333;
+  --text-dark: #eee;
+  --card-light: #fff;
+  --card-dark: #1e1e1e;
+  --border-light: #ddd;
+  --border-dark: #333;
+  --transition: all 0.3s ease;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0 15px;
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  transition: var(--transition);
+}
+
+h1 {
+  text-align: center;
+  margin: 40px 0 10px;
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+h1 img {
+  vertical-align: middle;
+}
+
+/* ====== NAVIGATION ====== */
+nav {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+nav a,
+nav button {
+  display: inline-block;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  margin: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition);
+  font-size: 15px;
+}
+
+nav a:hover,
+nav button:hover {
+  background: var(--primary-hover);
+}
+
+/* ====== DARK MODE BUTTON ====== */
+.dark-mode-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  padding: 8px 14px;
+  background-color: #ffb300;
+  color: #111;
+  border-radius: 6px;
+  cursor: pointer;
+  gap: 8px;
+  font-weight: 500;
+  border: none;
+  transition: var(--transition);
+}
+
+.dark-mode-btn:hover {
+  background-color: #ffa000;
+}
+
+/* ====== ARTICLE LIST ====== */
+#articles {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.article {
+  background: var(--card-light);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: var(--transition);
+}
+
+.article:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.article h3 {
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.article small {
+  color: #666;
+}
+
+/* ====== FORMS ====== */
+.form-container {
+  max-width: 600px;
+  margin: 30px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--card-light);
+  padding: 25px;
+  border-radius: 10px;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: var(--transition);
+}
+
+.form-container label {
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.form-container input,
+.form-container textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 15px;
+  width: 100%;
+  resize: vertical;
+  transition: var(--transition);
+}
+
+.form-container input:focus,
+.form-container textarea:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 3px rgba(0, 119, 255, 0.3);
+}
+
+.form-container button {
+  margin-top: 10px;
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.form-container button:hover {
+  background-color: var(--primary-hover);
+}
+
+.form-container p {
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* ====== FOOTER ====== */
+footer {
+  text-align: center;
+  margin: 40px 0 10px;
+  padding: 10px;
+  font-size: 0.9rem;
+  color: #777;
+  border-top: 1px solid var(--border-light);
+}
+
+/* ====== DARK MODE ====== */
+body.dark-mode {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+body.dark-mode .article,
+body.dark-mode .form-container {
+  background-color: var(--card-dark);
+  border-color: var(--border-dark);
+  color: var(--text-dark);
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode nav a,
+body.dark-mode nav button {
+  background-color: #444;
+  color: #eee;
+}
+
+body.dark-mode footer {
+  border-top-color: var(--border-dark);
+  color: #aaa;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 600px) {
+  nav a,
+  nav button {
+    display: block;
+    width: 100%;
+    margin: 8px 0;
+  }
+
+  .article {
+    padding: 15px;
+  }
+
+  .form-container {
+    width: 90%;
+    padding: 20px;
+  }
+}
+/* ====== Success Modal ====== */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: #fff;
+  color: #333;
+  padding: 25px 40px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  font-size: 1.1rem;
+}
+
+body.dark-mode .modal-content {
+  background-color: #1e1e1e;
+  color: #eee;
+}
+/* ====== Filter Bar ====== */
+.filter-bar {
+  text-align: center;
+  margin: 10px 0 25px;
+}
+
+.filter-bar label {
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.filter-bar select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+/* ===== User Banner ===== */
+.user-banner {
+  text-align: center;
+  background: rgba(0, 119, 255, 0.1);
+  border: 1px solid #0077ff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 0 auto 20px;
+  max-width: 400px;
+  color: #0077ff;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+body.dark-mode .user-banner {
+  background: rgba(0, 119, 255, 0.15);
+  border-color: #3399ff;
+  color: #66b3ff;
+}
+
+/* ===== Message Banner ===== */
+.message-banner {
+  text-align: center;
+  margin: 15px auto;
+  padding: 10px 15px;
+  max-width: 600px;
+  border-radius: 8px;
+  font-weight: 500;
+  display: none;
+  transition: opacity 0.3s ease;
+}
+
+.message-banner.success {
+  background-color: rgba(46, 125, 50, 0.15);
+  border: 1px solid #2e7d32;
+  color: #2e7d32;
+}
+
+.message-banner.error {
+  background-color: rgba(211, 47, 47, 0.15);
+  border: 1px solid #d32f2f;
+  color: #d32f2f;
+}
+
+body.dark-mode .message-banner.success {
+  background-color: rgba(76, 175, 80, 0.15);
+  color: #66bb6a;
+}
+
+body.dark-mode .message-banner.error {
+  background-color: rgba(244, 67, 54, 0.15);
+  color: #ef5350;
+}
