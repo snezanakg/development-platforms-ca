@@ -11,9 +11,11 @@
   <h1><img src="assets/icon-lock.png" width="28" /> Login</h1>
 
   <nav>
+
     <a href="index.html">Home</a>
     <a href="about.html">About</a>
   </nav>
+<div id="feedback" class="message-banner"></div>
 
   <main class="content">
     <form id="login-form" class="form-container">
@@ -32,22 +34,42 @@
     <p>© 2025 Supabase News Platform | Developed by Snežana Kragujevac</p>
   </footer>
 
-  <script type="module">
+   <script type="module">
     import { supabase } from './js/supabaseClient.js'
 
+    //Feedback Message Function
+    function showFeedback(message, type = 'success') {
+      const banner = document.getElementById('feedback')
+      banner.textContent = message
+      banner.className = `message-banner ${type}`
+      banner.style.display = 'block'
+      setTimeout(() => (banner.style.display = 'none'), 4000)
+    }
+
+    // Handle login form submit
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault()
-      const email = document.getElementById('email').value
-      const password = document.getElementById('password').value
 
-      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      const email = document.getElementById('email').value.trim()
+      const password = document.getElementById('password').value.trim()
 
-      const msg = document.getElementById('message')
+      if (!email || !password) {
+        showFeedback('❌ Please fill in both fields.', 'error')
+        return
+      }
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
       if (error) {
-        msg.textContent = '❌ ' + error.message
+        showFeedback('❌ Login failed: ' + error.message, 'error')
       } else {
-        msg.textContent = '✅ Login successful!'
-        window.location.href = 'index.html'
+        showFeedback('✅ Login successful! Redirecting...', 'success')
+        setTimeout(() => {
+          window.location.href = 'index.html'
+        }, 2000)
       }
     })
   </script>
