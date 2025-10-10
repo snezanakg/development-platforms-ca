@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Articles | Supabase News Platform</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" type="image/png" href="assets/icon-article.png" />
+</head>
+<body>
+  <h1><img src="assets/icon-article.png" width="28" alt="My Articles" /> My Articles</h1>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="create.html">Create Article</a>
+    <a href="about.html">About</a>
+    <button id="logout">Logout</button>
+  </nav>
+
+  <!-- User Banner -->
+  <div id="user-info" class="user-banner" style="display:none;"></div>
+
+  <!-- Feedback Banner -->
+  <div id="feedback" class="message-banner"></div>
+
+  <!-- Articles Container -->
+  <main class="content">
+    <div id="articles" class="article-list"></div>
+  </main>
+
+  <footer>
+    <p>© 2025 Supabase News Platform | Developed by Snežana Kragujevac</p>
+  </footer>
+
+  <script type="module">
+    import { supabase } from './js/supabaseClient.js'
+
+    //Feedback banner
+    function showFeedback(message, type = 'success') {
+      const banner = document.getElementById('feedback')
+      banner.textContent = message
+      banner.className = `message-banner ${type}`
+      banner.style.display = 'block'
+      setTimeout(() => (banner.style.display = 'none'), 4000)
+    }
+
+    //Check if user is logged in
+    async function checkUser() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      const userBanner = document.getElementById('user-info')
+
+      if (!user) {
+        alert('⚠️ You must be logged in to view your articles.')
+        window.location.href = 'login.html'
+        return null
+      }
+
+      userBanner.style.display = 'block'
+      userBanner.textContent = `👤 Logged in as: ${user.email}`
+
+      return user
+    }
+
+    //Load user’s articles
+    async function loadUserArticles(userId) {
+      const container = document.getElementById('articles')
+      container.innerHTML = '<p>Loading your articles...</p>'
+
+      const { data, error } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('submitted_by', userId)
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        showFeedback('❌ Error loading articles: ' + error.message, 'error')
+        return
+      }
+
+      if (!data || data.length === 0) {
+        container.innerHTML = '<p>You haven’t posted any articles yet.</p>'
+        return
+      }
+
+      container.innerHTML = data
+        .map(
+          (a) => `
+          <div class="article">
+            <h3>${a.title}</h3>
+            <p>${a.body}</p>
+            <small>${a.category} | ${new Date(a.created_at).toLocaleString()}</small>
+          </div>
+        `
+        )
+        .join('')
+    }
+
+    //Logout handler
+    document.getElementById('logout').addEventListener('click', async () => {
+      const confirmLogout = confirm('Are you sure you want to log out?')
+      if (confirmLogout) {
+        await supabase.auth.signOut()
+        window.location.href = 'index.html'
+      }
+    })
+
+    //Run the page
+    const user = await checkUser()
+    if (user) {
+      loadUserArticles(user.id)
+    }
+  </script>
+</body>
+</html>
