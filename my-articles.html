@@ -3,30 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Articles | Supabase News Platform</title>
+  <title>📝 My Articles</title>
   <link rel="stylesheet" href="css/styles.css" />
-  <link rel="icon" type="image/png" href="assets/icon-article.png" />
 </head>
 <body>
-  <h1><img src="assets/icon-article.png" width="28" alt="My Articles" /> My Articles</h1>
+  <header>
+    <h1>📝 My Articles</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="create.html">Create</a>
+      <button id="logout">Logout</button>
+    </nav>
+  </header>
 
-  <!-- Navigation -->
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="create.html">Create Article</a>
-    <a href="about.html">About</a>
-    <button id="logout">Logout</button>
-  </nav>
-
-  <!-- User Banner -->
-  <div id="user-info" class="user-banner" style="display:none;"></div>
-
-  <!-- Feedback Banner -->
-  <div id="feedback" class="message-banner"></div>
-
-  <!-- Articles Container -->
-  <main class="content">
-    <div id="articles" class="article-list"></div>
+  <main>
+    <div id="articles-container"></div>
   </main>
 
   <footer>
@@ -36,39 +27,19 @@
   <script type="module">
     import { supabase } from './js/supabaseClient.js'
 
-    //Feedback banner
-    function showFeedback(message, type = 'success') {
-      const banner = document.getElementById('feedback')
-      banner.textContent = message
-      banner.className = `message-banner ${type}`
-      banner.style.display = 'block'
-      setTimeout(() => (banner.style.display = 'none'), 4000)
-    }
+    const container = document.getElementById('articles-container')
 
-    //Check if user is logged in
-    async function checkUser() {
+    async function loadUserArticles() {
       const {
-        data: { user },
-      } = await supabase.auth.getUser()
+        data: { session },
+      } = await supabase.auth.getSession()
 
-      const userBanner = document.getElementById('user-info')
-
-      if (!user) {
-        alert('⚠️ You must be logged in to view your articles.')
-        window.location.href = 'login.html'
-        return null
+      if (!session) {
+        container.innerHTML = '<p>Please log in to view your articles.</p>'
+        return
       }
 
-      userBanner.style.display = 'block'
-      userBanner.textContent = `👤 Logged in as: ${user.email}`
-
-      return user
-    }
-
-    //Load user’s articles
-    async function loadUserArticles(userId) {
-      const container = document.getElementById('articles')
-      container.innerHTML = '<p>Loading your articles...</p>'
+      const userId = session.user.id
 
       const { data, error } = await supabase
         .from('articles')
@@ -77,42 +48,34 @@
         .order('created_at', { ascending: false })
 
       if (error) {
-        showFeedback('❌ Error loading articles: ' + error.message, 'error')
+        container.innerHTML = `<p class="error">Error: ${error.message}</p>`
         return
       }
 
-      if (!data || data.length === 0) {
-        container.innerHTML = '<p>You haven’t posted any articles yet.</p>'
+      if (data.length === 0) {
+        container.innerHTML = '<p>You have not submitted any articles yet.</p>'
         return
       }
 
       container.innerHTML = data
         .map(
           (a) => `
-          <div class="article">
-            <h3>${a.title}</h3>
-            <p>${a.body}</p>
-            <small>${a.category} | ${new Date(a.created_at).toLocaleString()}</small>
-          </div>
-        `
+            <article class="article-card">
+              <h3>${a.title}</h3>
+              <p>${a.body}</p>
+              <small>${a.category} | ${new Date(a.created_at).toLocaleString()}</small>
+            </article>
+          `
         )
         .join('')
     }
 
-    //Logout handler
     document.getElementById('logout').addEventListener('click', async () => {
-      const confirmLogout = confirm('Are you sure you want to log out?')
-      if (confirmLogout) {
-        await supabase.auth.signOut()
-        window.location.href = 'index.html'
-      }
+      await supabase.auth.signOut()
+      window.location.href = 'login.html'
     })
 
-    //Run the page
-    const user = await checkUser()
-    if (user) {
-      loadUserArticles(user.id)
-    }
+    loadUserArticles()
   </script>
 </body>
 </html>
